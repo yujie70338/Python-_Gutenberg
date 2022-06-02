@@ -2,8 +2,6 @@
 # coding: utf-8
 
 
-
-
 from selenium import webdriver
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait
@@ -39,7 +37,7 @@ def getMainLinks():
         title= a.get_attribute('innerText')
         title= re.sub(regex, "", title)
         title= re.sub(regex1,  "", title)
-#         print(title)
+#         print(title) # 檢查用  
 #         if re.search(regex, title) == None:
 #             continue
 #         else:
@@ -49,7 +47,7 @@ def getMainLinks():
             "link": a.get_attribute('href'),
             "title": title            
         })
-#     pprint.pprint(listData)    
+#     pprint.pprint(listData)  # 檢查用  
 def getSubLinks():
     for i in range( len(listData) ):
 #         if i >5:
@@ -69,14 +67,9 @@ def getSubLinks():
             for a in subelms:
                 listData[i]["sub"].append({
                     "sub_link": a.get_attribute("href")
-                })
-            
+                })            
         except TimeoutException as e:
-            continue
-            
-#     print(listData)
-
-
+            continue           
 
 def saveJson():
     fp = open(f"{folderPath}/Gutenberg.json", "w", encoding="utf-8")
@@ -85,18 +78,17 @@ def saveJson():
         
 def writeTxt():
 
-
     fp = open(f"{folderPath}/Gutenberg.json", "r", encoding="utf-8")
     strJson = fp.read()
     fp.close()
 
     # 走訪小說文字內容
     listResult = json.loads(strJson) 
-#     print(listResult)
+#     print(listResult) # 檢查用
     
     for i in range( len(listResult) ):
-#         if i >4:
-#             break
+#         if i >4:  
+#             break # 檢查用
             
         if listResult[i]['title'] == False:
             continue
@@ -105,13 +97,13 @@ def writeTxt():
                 driver.get( listResult[i]['sub'][j]['sub_link'] )
                 div = driver.find_element(By.CSS_SELECTOR, 'body')                
                 strContent = div.get_attribute('innerText')
-#                 print(strContent)
+#                 print(strContent) # 檢查用
 
-                # 資料清理
+# 資料清理，去除特殊字元
                 strContent = re.findall(r"[\u4E00-\u9FFF，《，。。》 ：「」（）－－『』』「〔」;〕；、＊、?？!！『』]+", strContent)
                 strContent = ''.join(strContent)
                 strContent = re.sub(r" +", "", strContent)
-#                 print(strContent)
+#                 print(strContent) # 檢查用
 
 
                 # 決定 txt 的檔案名稱
